@@ -1,7 +1,9 @@
 import { Context } from 'telegraf';
 
-export interface SessionData {}
+export interface ISessionData {
+  steamStoreSubscribed: boolean;
+}
 
 export interface IBotContext extends Context {
-  session: SessionData;
+  session: ISessionData;
 }
