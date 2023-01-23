@@ -38,6 +38,7 @@
     "axios": "^1.2.3",
     "dotenv": "^16.0.3",
     "telegraf": "^4.11.2",
-    "telegraf-session-local": "^2.1.0"
+    "telegraf-session-local": "^2.1.0",
+    "tslog": "^4.7.1"
   }
 }

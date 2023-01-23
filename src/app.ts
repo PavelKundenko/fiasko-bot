@@ -8,11 +8,13 @@ import { SteamCommand } from '@modules/steam';
 import { Command } from '@commands/command.abstract';
 
 class Bot {
-  bot: Telegraf<IBotContext>;
+  private readonly bot: Telegraf<IBotContext>;
 
-  commands: Command[] = [];
+  private commands: Command[] = [];
 
-  constructor(private readonly configService: IConfigService) {
+  constructor(
+    private readonly configService: IConfigService,
+  ) {
     this.bot = new Telegraf<IBotContext>(this.configService.get('TELEGRAM_TOKEN'));
 
     const session = new LocalSession({ database: 'sessions.json' });
@@ -32,6 +34,8 @@ class Bot {
   }
 }
 
-const bot = new Bot(new ConfigService());
+const bot = new Bot(
+  new ConfigService(),
+);
 
 bot.init();
