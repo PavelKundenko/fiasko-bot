@@ -1,1 +1,1 @@
-export { SteamCommand } from './commands/steam.command';
+export { SteamController } from './controllers/steam.controller';

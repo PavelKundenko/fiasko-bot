@@ -1,11 +1,12 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { ILogger } from '@services/logger/logger.interface';
+import { inject, injectable } from 'inversify';
+import { BINDINGS } from '@typings/bindings';
 import { IApiService } from './api.interface';
 
+@injectable()
 export class ApiService implements IApiService {
-  constructor(public logger: ILogger) {
-    this.logger = logger;
-  }
+  constructor(@inject(BINDINGS.ILogger) private logger: ILogger) {}
 
   async get<TData extends unknown, TParams extends AxiosRequestConfig = AxiosRequestConfig>(
     url: string,
