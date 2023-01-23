@@ -1,11 +1,11 @@
 import { Telegraf } from 'telegraf';
 import LocalSession from 'telegraf-session-local';
-import { IConfigService } from './services/config/config.interface';
-import { ConfigService } from './services/config/config.service';
-import { IBotContext } from './context/context.interface';
-import { Command } from './commands/command.abstract';
-import { StartCommand } from './commands/start/start.command';
-import { SteamCommand } from './commands/steam/steam.command';
+import { IConfigService } from '@services/config/config.interface';
+import { ConfigService } from '@services/config/config.service';
+import { IBotContext } from '@context/context.interface';
+import { StartCommand } from '@modules/start';
+import { SteamCommand } from '@modules/steam';
+import { Command } from '@commands/command.abstract';
 
 class Bot {
   bot: Telegraf<IBotContext>;
