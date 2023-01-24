@@ -1,19 +1,22 @@
 import { Telegraf } from 'telegraf';
+import { inject, injectable } from 'inversify';
 import LocalSession from 'telegraf-session-local';
-import { IConfigService } from '@services/config/config.interface';
-import { ConfigService } from '@services/config/config.service';
 import { IBotContext } from '@context/context.interface';
-import { StartCommand } from '@modules/start';
-import { SteamCommand } from '@modules/steam';
-import { Command } from '@commands/command.abstract';
+import { BINDINGS } from '@typings/bindings';
+import { StartController } from '@modules/start';
+import { SteamController } from '@modules/steam';
+import { Command } from '@abstracts/command.abstract';
+import { IConfigService } from '@services/config';
+import 'reflect-metadata';
 
-class Bot {
+@injectable()
+export class Bot {
   private readonly bot: Telegraf<IBotContext>;
 
   private commands: Command[] = [];
 
   constructor(
-    private readonly configService: IConfigService,
+    @inject(BINDINGS.IConfigService) private readonly configService: IConfigService,
   ) {
     this.bot = new Telegraf<IBotContext>(this.configService.get('TELEGRAM_TOKEN'));
 
@@ -24,18 +27,12 @@ class Bot {
 
   init() {
     this.commands = [
-      new StartCommand(this.bot),
-      new SteamCommand(this.bot),
+      new StartController(this.bot),
+      new SteamController(this.bot),
     ];
 
-    this.commands.forEach((command) => command.handle());
+    this.commands.forEach((command) => command.register());
 
-    this.bot.launch();
+    return this.bot.launch();
   }
 }
-
-const bot = new Bot(
-  new ConfigService(),
-);
-
-bot.init();
