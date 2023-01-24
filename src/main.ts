@@ -1,16 +1,25 @@
-import { Container } from 'inversify';
+import { Container, ContainerModule } from 'inversify';
 import { ConfigService, IConfigService } from '@services/config';
 import { BINDINGS } from '@typings/bindings';
 import { ILogger, LoggerService } from '@services/logger';
+import { ApiService, IApiService } from '@services/api';
 import { Bot } from './app';
 
-const appContainer = new Container();
+const start = () => {
+  const appContainer = new Container();
 
-appContainer.bind<IConfigService>(BINDINGS.IConfigService).to(ConfigService);
-appContainer.bind<ILogger>(BINDINGS.ILogger).to(LoggerService);
+  const appBindings = new ContainerModule((bind) => {
+    bind<Bot>(BINDINGS.Bot).to(Bot);
+    bind<IConfigService>(BINDINGS.IConfigService).to(ConfigService);
+    bind<ILogger>(BINDINGS.ILogger).to(LoggerService);
+    bind<IApiService>(BINDINGS.IApiService).to(ApiService);
+  });
 
-const bot = appContainer.get<Bot>(BINDINGS.Bot);
+  appContainer.load(appBindings);
 
-bot.init();
+  const bot = appContainer.get<Bot>(BINDINGS.Bot);
 
-export { bot, appContainer };
+  bot.init();
+};
+
+start();

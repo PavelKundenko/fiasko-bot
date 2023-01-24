@@ -3,6 +3,7 @@ import { ILogger } from '@services/logger/logger.interface';
 import { inject, injectable } from 'inversify';
 import { BINDINGS } from '@typings/bindings';
 import { IApiService } from './api.interface';
+import 'reflect-metadata';
 
 @injectable()
 export class ApiService implements IApiService {

@@ -1,13 +1,15 @@
 import { Telegraf } from 'telegraf';
-import { inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import LocalSession from 'telegraf-session-local';
 import { IBotContext } from '@context/context.interface';
+import { BINDINGS } from '@typings/bindings';
 import { StartController } from '@modules/start';
 import { SteamController } from '@modules/steam';
-import { Command } from '@commands/command.abstract';
+import { Command } from '@abstracts/command.abstract';
 import { IConfigService } from '@services/config';
-import { BINDINGS } from '@typings/bindings';
+import 'reflect-metadata';
 
+@injectable()
 export class Bot {
   private readonly bot: Telegraf<IBotContext>;
 

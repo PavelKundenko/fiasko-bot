@@ -1,5 +1,5 @@
 import { Telegraf } from 'telegraf';
-import { Command } from '@commands/command.abstract';
+import { Command } from '../../../abstracts/command.abstract';
 import { IBotContext } from '@context/context.interface';
 import { ESteamCommand } from '@modules/steam/controllers/steam.commands';
 
