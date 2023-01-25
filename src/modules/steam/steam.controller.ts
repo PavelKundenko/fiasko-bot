@@ -1,9 +1,9 @@
 import { Telegraf } from 'telegraf';
-import { Command } from '../../../abstracts/command.abstract';
+import { Controller } from '@abstracts/controller.abstract';
 import { IBotContext } from '@context/context.interface';
-import { ESteamCommand } from '@modules/steam/controllers/steam.commands';
+import { ESteamCommand } from './steam.commands';
 
-export class SteamController extends Command {
+export class SteamController extends Controller {
   constructor(public bot: Telegraf<IBotContext>) {
     super(bot);
   }

@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { ILogger } from '@services/logger/logger.interface';
 import { inject, injectable } from 'inversify';
-import { BINDINGS } from '@typings/bindings';
+import { BINDINGS } from '@typings/globalBindings';
 import { IApiService } from './api.interface';
 import 'reflect-metadata';
 

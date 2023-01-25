@@ -1,1 +1,1 @@
-export { StartController } from './controllers/start.controller';
+export { StartController } from './start.controller';

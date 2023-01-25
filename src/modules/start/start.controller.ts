@@ -1,8 +1,8 @@
 import { Telegraf } from 'telegraf';
 import { IBotContext } from '@context/context.interface';
-import { Command } from '@abstracts/command.abstract';
+import { Controller } from '@abstracts/controller.abstract';
 
-export class StartController extends Command {
+export class StartController extends Controller {
   constructor(bot: Telegraf<IBotContext>) {
     super(bot);
   }
