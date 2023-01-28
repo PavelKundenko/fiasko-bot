@@ -12,7 +12,7 @@ import 'reflect-metadata';
 
 @injectable()
 export class Bot {
-  private readonly bot: Telegraf<IBotContext>;
+  protected readonly bot: Telegraf<IBotContext>;
 
   private controllers: Controller[] = [];
 
@@ -30,12 +30,13 @@ export class Bot {
   init() {
     this.controllers = [
       new StartController(this.bot),
+      // @ts-ignore
       new SteamController(this.bot),
     ];
 
     this.controllers.forEach((command) => command.register());
 
-    this.bot.launch().then(() => {
+    this.bot.launch({ dropPendingUpdates: true }).then(() => {
       this.logger.log('Bot started!');
     });
   }
