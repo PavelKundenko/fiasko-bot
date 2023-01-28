@@ -1,26 +1,25 @@
 import { Telegraf } from 'telegraf';
+import { inject, injectable, unmanaged } from 'inversify';
 import { Controller } from '@abstracts/controller.abstract';
 import { IBotContext } from '@context/context.interface';
+import { ISteamService } from './steam.interface';
 import { ESteamCommand } from './steam.commands';
+import { SteamService } from './steam.service';
+import 'reflect-metadata';
 
+@injectable()
 export class SteamController extends Controller {
-  constructor(public bot: Telegraf<IBotContext>) {
+  constructor(
+    protected bot: Telegraf<IBotContext>,
+    @inject(SteamService) private readonly steamService: ISteamService,
+  ) {
     super(bot);
+    console.log(steamService);
   }
 
   register(): void {
-    this.bot.command(ESteamCommand.SubscribeSales, (ctx) => {
+    this.bot.command(ESteamCommand.SubscribeSales, this.steamService.subscribe);
 
-    });
-
-    this.bot.command(ESteamCommand.UnsubscribeSales, (ctx) => {
-      if (ctx.session.steamStoreSubscribed) {
-        ctx.session.steamStoreSubscribed = false;
-
-        ctx.reply('Unsubscribed from Steam Sales');
-      } else {
-        ctx.reply('You are not subscribed');
-      }
-    });
+    this.bot.command(ESteamCommand.UnsubscribeSales, this.steamService.unsubscribe);
   }
 }

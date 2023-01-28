@@ -3,26 +3,30 @@ import { ConfigService, IConfigService } from '@services/config';
 import { BINDINGS } from '@typings/globalBindings';
 import { ILogger, LoggerService } from '@services/logger';
 import { ApiService, IApiService } from '@services/api';
-import { Bot } from './app';
+import { steamBindings } from '@modules/steam/bindings';
+import { App } from './app';
+import { BotProvider } from './botProvider';
 
 const start = () => {
   const appContainer = new Container();
 
   const appBindings = new ContainerModule((bind) => {
-    bind<Bot>(BINDINGS.Bot).to(Bot).inSingletonScope();
+    bind<App>(BINDINGS.App).to(App).inSingletonScope();
+    bind<BotProvider>(BINDINGS.BotProvider).to(BotProvider).inSingletonScope();
     bind<IConfigService>(BINDINGS.IConfigService).to(ConfigService).inSingletonScope();
     bind<ILogger>(BINDINGS.ILogger).to(LoggerService).inSingletonScope();
     bind<IApiService>(BINDINGS.IApiService).to(ApiService).inSingletonScope();
   });
 
   appContainer.load(appBindings);
+  appContainer.load(steamBindings);
 
-  const bot = appContainer.get<Bot>(BINDINGS.Bot);
+  const app = appContainer.get<App>(BINDINGS.App);
 
-  bot.init();
+  app.init();
 
-  process.on('SIGINT', () => bot.stop('SIGINT'));
-  process.on('SIGTERM', () => bot.stop('SIGTERM'));
+  process.on('SIGINT', () => app.stop('SIGINT'));
+  process.on('SIGTERM', () => app.stop('SIGTERM'));
 };
 
 start();

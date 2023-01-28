@@ -10,7 +10,6 @@ export class ConfigService implements IConfigService {
   constructor() {
     const { parsed, error } = config();
 
-    console.log(parsed, error);
     if (error) {
       throw new Error('config not found');
     }

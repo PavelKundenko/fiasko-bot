@@ -1,7 +1,11 @@
+import { injectable } from 'inversify';
 import { TCommandContext } from '@typings/telegraf';
+import { ISteamService } from './steam.interface';
+import 'reflect-metadata';
 
-export class SteamService {
-  subscribe(ctx: TCommandContext) {
+@injectable()
+export class SteamService implements ISteamService {
+  public subscribe(ctx: TCommandContext) {
     if (!ctx.session.steamStoreSubscribed) {
       ctx.session.steamStoreSubscribed = true;
 
@@ -9,7 +13,15 @@ export class SteamService {
     } else {
       ctx.reply('You are already subscribed');
     }
-  };
+  }
 
-  unsubscribe(ctx: TCommandContext) {}
+  public unsubscribe(ctx: TCommandContext) {
+    if (ctx.session.steamStoreSubscribed) {
+      ctx.session.steamStoreSubscribed = false;
+
+      ctx.reply('Unsubscribed from Steam Sales');
+    } else {
+      ctx.reply('You are not subscribed');
+    }
+  }
 }

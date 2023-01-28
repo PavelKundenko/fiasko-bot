@@ -1,5 +1,6 @@
 export const BINDINGS = {
-  Bot: Symbol.for('Bot'),
+  App: Symbol.for('App'),
+  BotProvider: Symbol.for('BotProvider'),
   IConfigService: Symbol.for('IConfigService'),
   ILogger: Symbol.for('ILogger'),
   IApiService: Symbol.for('IApiService'),
