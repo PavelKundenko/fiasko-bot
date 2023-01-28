@@ -35,7 +35,7 @@ export class Bot {
 
     this.controllers.forEach((command) => command.register());
 
-    this.bot.launch().then(() => {
+    this.bot.launch({ dropPendingUpdates: true }).then(() => {
       this.logger.log('Bot started!');
     });
   }

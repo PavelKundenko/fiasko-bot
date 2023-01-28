@@ -10,13 +10,7 @@ export class SteamController extends Controller {
 
   register(): void {
     this.bot.command(ESteamCommand.SubscribeSales, (ctx) => {
-      if (!ctx.session.steamStoreSubscribed) {
-        ctx.session.steamStoreSubscribed = true;
 
-        ctx.reply('Subscribed to Steam Sales!');
-      } else {
-        ctx.reply('You are already subscribed');
-      }
     });
 
     this.bot.command(ESteamCommand.UnsubscribeSales, (ctx) => {
