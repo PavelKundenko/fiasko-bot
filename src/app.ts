@@ -1,33 +1,33 @@
-import { inject, injectable } from 'inversify';
-import { BINDINGS } from '@typings/globalBindings';
-import { Controller } from '@abstracts/controller.abstract';
+import { inject, injectable, multiInject } from 'inversify';
+import { Telegraf } from 'telegraf';
+import { BINDINGS } from '@typings/global.bindings';
 import { ILogger } from '@services/logger';
-import { BotProvider } from './botProvider';
+import { BotProvider } from '@providers/bot.provider';
+import { IBotContext } from '@context/context.interface';
+import { IController } from '@abstracts/controller.interface';
 import 'reflect-metadata';
 
 @injectable()
 export class App {
-  private controllers: Controller[] = [];
+  private bot: Telegraf<IBotContext>;
 
   constructor(
     @inject(BINDINGS.BotProvider) private readonly provider: BotProvider,
     @inject(BINDINGS.ILogger) private readonly logger: ILogger,
-  ) {}
+    @multiInject(BINDINGS.Controllers) private readonly controllers: IController[],
+  ) {
+    this.bot = provider.getBot();
+  }
 
   init() {
-    // this.controllers = [
-    //   new StartController(this.bot),
-    //   new SteamController(this.bot),
-    // ];
-    //
-    // this.controllers.forEach((command) => command.register());
+    this.controllers.forEach((command) => command.register());
 
-    this.provider.bot.launch({ dropPendingUpdates: true }).then(() => {
+    this.bot.launch({ dropPendingUpdates: true }).then(() => {
       this.logger.log('Bot started!');
     });
   }
 
   stop(reason?: string) {
-    this.provider.bot.stop(reason);
+    this.bot.stop(reason);
   }
 }

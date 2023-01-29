@@ -1,2 +1,2 @@
 export { SteamController } from './steam.controller';
-export { STEAM_BINDINGS } from './bindings';
+// export { STEAM_BINDINGS } from './bindings';

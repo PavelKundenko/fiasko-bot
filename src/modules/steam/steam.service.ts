@@ -5,7 +5,7 @@ import 'reflect-metadata';
 
 @injectable()
 export class SteamService implements ISteamService {
-  public subscribe(ctx: TCommandContext) {
+  subscribe(ctx: TCommandContext) {
     if (!ctx.session.steamStoreSubscribed) {
       ctx.session.steamStoreSubscribed = true;
 
@@ -15,7 +15,7 @@ export class SteamService implements ISteamService {
     }
   }
 
-  public unsubscribe(ctx: TCommandContext) {
+  unsubscribe(ctx: TCommandContext) {
     if (ctx.session.steamStoreSubscribed) {
       ctx.session.steamStoreSubscribed = false;
 

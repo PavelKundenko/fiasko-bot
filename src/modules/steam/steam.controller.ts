@@ -1,23 +1,28 @@
+import { inject, injectable } from 'inversify';
 import { Telegraf } from 'telegraf';
-import { inject, injectable, unmanaged } from 'inversify';
-import { Controller } from '@abstracts/controller.abstract';
+import { BotProvider } from '@providers/bot.provider';
+import { IController } from '@abstracts/controller.interface';
 import { IBotContext } from '@context/context.interface';
+import {
+  BINDINGS,
+  STEAM_BINDINGS,
+} from '@typings/global.bindings';
 import { ISteamService } from './steam.interface';
 import { ESteamCommand } from './steam.commands';
-import { SteamService } from './steam.service';
 import 'reflect-metadata';
 
 @injectable()
-export class SteamController extends Controller {
+export class SteamController implements IController {
+  private readonly bot: Telegraf<IBotContext>;
+
   constructor(
-    protected bot: Telegraf<IBotContext>,
-    @inject(SteamService) private readonly steamService: ISteamService,
+    @inject(BINDINGS.BotProvider) private readonly provider: BotProvider,
+    @inject(STEAM_BINDINGS.ISteamService) private readonly steamService: ISteamService,
   ) {
-    super(bot);
-    console.log(steamService);
+    this.bot = provider.getBot();
   }
 
-  register(): void {
+  register() {
     this.bot.command(ESteamCommand.SubscribeSales, this.steamService.subscribe);
 
     this.bot.command(ESteamCommand.UnsubscribeSales, this.steamService.unsubscribe);

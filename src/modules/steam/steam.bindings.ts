@@ -1,14 +1,11 @@
 import { ContainerModule } from 'inversify';
+import { BINDINGS, STEAM_BINDINGS } from '@typings/global.bindings';
 import { ISteamService } from '@modules/steam/steam.interface';
 import { SteamService } from '@modules/steam/steam.service';
 import { SteamController } from '@modules/steam/steam.controller';
-
-export const STEAM_BINDINGS = {
-  SteamController: Symbol.for('SteamController'),
-  ISteamService: Symbol.for('ISteamService'),
-};
+import { IController } from '@abstracts/controller.interface';
 
 export const steamBindings = new ContainerModule((bind) => {
-  bind<SteamController>(STEAM_BINDINGS.SteamController).to(SteamController);
+  bind<IController>(BINDINGS.Controllers).to(SteamController);
   bind<ISteamService>(STEAM_BINDINGS.ISteamService).to(SteamService);
 });
