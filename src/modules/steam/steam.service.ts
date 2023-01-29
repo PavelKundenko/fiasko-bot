@@ -1,10 +1,16 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { TCommandContext } from '@typings/telegraf';
+import { IApiService } from '@services/api';
+import { BINDINGS } from '@typings/global.bindings';
 import { ISteamService } from './steam.interface';
 import 'reflect-metadata';
 
 @injectable()
 export class SteamService implements ISteamService {
+  constructor(
+    @inject(BINDINGS.IApiService) private apiService: IApiService,
+  ) {}
+
   subscribe(ctx: TCommandContext) {
     if (!ctx.session.steamStoreSubscribed) {
       ctx.session.steamStoreSubscribed = true;
@@ -24,4 +30,6 @@ export class SteamService implements ISteamService {
       ctx.reply('You are not subscribed');
     }
   }
+
+  private getSalesCollection() {}
 }
