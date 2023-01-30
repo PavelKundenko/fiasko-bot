@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import LocalSession from 'telegraf-session-local';
 import { Telegraf } from 'telegraf';
-import { IBotContext } from '@context/context.interface';
+import { IBotContext, ISessionData } from '@context/context.interface';
 import { BINDINGS } from '@typings/global.bindings';
 import { IConfigService } from '@services/config';
 import 'reflect-metadata';
@@ -15,7 +15,9 @@ export class BotProvider {
   ) {
     this.bot = new Telegraf<IBotContext>(this.configService.get('TELEGRAM_TOKEN'));
 
-    const session = new LocalSession({ database: 'sessions.json' });
+    const session = new LocalSession<ISessionData>({
+      database: 'sessions.json',
+    });
 
     this.bot.use(session.middleware());
   }

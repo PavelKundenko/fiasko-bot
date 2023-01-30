@@ -22,9 +22,11 @@ export class SteamController implements IController {
     this.bot = provider.getBot();
   }
 
-  register() {
+  register = () => {
     this.bot.command(ESteamCommand.SubscribeSales, this.steamService.subscribe);
 
     this.bot.command(ESteamCommand.UnsubscribeSales, this.steamService.unsubscribe);
-  }
+
+    this.bot.command(ESteamCommand.Sales, this.steamService.getSales);
+  };
 }

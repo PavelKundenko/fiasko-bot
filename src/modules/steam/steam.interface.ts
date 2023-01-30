@@ -4,4 +4,6 @@ export interface ISteamService {
   subscribe: (ctx: TCommandContext) => void;
 
   unsubscribe: (ctx: TCommandContext) => void;
+
+  getSales: (ctx: TCommandContext) => void;
 }
