@@ -1,32 +1,32 @@
+import { inject, injectable } from 'inversify';
 import { Telegraf } from 'telegraf';
-import { Controller } from '@abstracts/controller.abstract';
+import { BotProvider } from '@providers/bot.provider';
+import { IController } from '@abstracts/controller.interface';
 import { IBotContext } from '@context/context.interface';
+import {
+  BINDINGS,
+  STEAM_BINDINGS,
+} from '@typings/global.bindings';
+import { ISteamService } from './steam.interface';
 import { ESteamCommand } from './steam.commands';
+import 'reflect-metadata';
 
-export class SteamController extends Controller {
-  constructor(public bot: Telegraf<IBotContext>) {
-    super(bot);
+@injectable()
+export class SteamController implements IController {
+  private readonly bot: Telegraf<IBotContext>;
+
+  constructor(
+    @inject(BINDINGS.BotProvider) private readonly provider: BotProvider,
+    @inject(STEAM_BINDINGS.ISteamService) private readonly steamService: ISteamService,
+  ) {
+    this.bot = provider.getBot();
   }
 
-  register(): void {
-    this.bot.command(ESteamCommand.SubscribeSales, (ctx) => {
-      if (!ctx.session.steamStoreSubscribed) {
-        ctx.session.steamStoreSubscribed = true;
+  register = () => {
+    this.bot.command(ESteamCommand.SubscribeSales, this.steamService.subscribe);
 
-        ctx.reply('Subscribed to Steam Sales!');
-      } else {
-        ctx.reply('You are already subscribed');
-      }
-    });
+    this.bot.command(ESteamCommand.UnsubscribeSales, this.steamService.unsubscribe);
 
-    this.bot.command(ESteamCommand.UnsubscribeSales, (ctx) => {
-      if (ctx.session.steamStoreSubscribed) {
-        ctx.session.steamStoreSubscribed = false;
-
-        ctx.reply('Unsubscribed from Steam Sales');
-      } else {
-        ctx.reply('You are not subscribed');
-      }
-    });
-  }
+    this.bot.command(ESteamCommand.Sales, this.steamService.getSales);
+  };
 }
