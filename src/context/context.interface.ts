@@ -1,7 +1,8 @@
 import { Context } from 'telegraf';
 
 export interface ISessionData {
-  steamStoreSubscribed: boolean;
+  isSubscribedSales: boolean;
+  dateSubscribed: string | null;
 }
 
 export interface IBotContext extends Context {

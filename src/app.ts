@@ -1,41 +1,28 @@
+import { inject, injectable, multiInject } from 'inversify';
 import { Telegraf } from 'telegraf';
-import { inject, injectable } from 'inversify';
-import LocalSession from 'telegraf-session-local';
-import { IBotContext } from '@context/context.interface';
-import { BINDINGS } from '@typings/globalBindings';
-import { StartController } from '@modules/start';
-import { SteamController } from '@modules/steam';
-import { Controller } from '@abstracts/controller.abstract';
-import { IConfigService } from '@services/config';
+import { BINDINGS } from '@typings/global.bindings';
 import { ILogger } from '@services/logger';
+import { BotProvider } from '@providers/bot.provider';
+import { IBotContext } from '@context/context.interface';
+import { IController } from '@abstracts/controller.interface';
 import 'reflect-metadata';
 
 @injectable()
-export class Bot {
-  private readonly bot: Telegraf<IBotContext>;
-
-  private controllers: Controller[] = [];
+export class App {
+  private bot: Telegraf<IBotContext>;
 
   constructor(
-    @inject(BINDINGS.IConfigService) private readonly configService: IConfigService,
+    @inject(BINDINGS.BotProvider) private readonly provider: BotProvider,
     @inject(BINDINGS.ILogger) private readonly logger: ILogger,
+    @multiInject(BINDINGS.Controllers) private readonly controllers: IController[],
   ) {
-    this.bot = new Telegraf<IBotContext>(this.configService.get('TELEGRAM_TOKEN'));
-
-    const session = new LocalSession({ database: 'sessions.json' });
-
-    this.bot.use(session.middleware());
+    this.bot = provider.getBot();
   }
 
   init() {
-    this.controllers = [
-      new StartController(this.bot),
-      new SteamController(this.bot),
-    ];
-
     this.controllers.forEach((command) => command.register());
 
-    this.bot.launch().then(() => {
+    this.bot.launch({ dropPendingUpdates: true }).then(() => {
       this.logger.log('Bot started!');
     });
   }

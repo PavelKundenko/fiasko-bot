@@ -1,28 +1,35 @@
 import { Container, ContainerModule } from 'inversify';
 import { ConfigService, IConfigService } from '@services/config';
-import { BINDINGS } from '@typings/globalBindings';
+import { BINDINGS } from '@typings/global.bindings';
 import { ILogger, LoggerService } from '@services/logger';
 import { ApiService, IApiService } from '@services/api';
-import { Bot } from './app';
+import { steamBindings } from '@modules/steam/steam.bindings';
+import { startBindings } from '@modules/start/start.bindings';
+import { BotProvider } from '@providers/bot.provider';
+import { App } from './app';
 
 const start = () => {
   const appContainer = new Container();
 
+  appContainer.bind<BotProvider>(BINDINGS.BotProvider).to(BotProvider).inSingletonScope();
+
   const appBindings = new ContainerModule((bind) => {
-    bind<Bot>(BINDINGS.Bot).to(Bot).inSingletonScope();
+    bind<App>(BINDINGS.App).to(App).inSingletonScope();
     bind<IConfigService>(BINDINGS.IConfigService).to(ConfigService).inSingletonScope();
     bind<ILogger>(BINDINGS.ILogger).to(LoggerService).inSingletonScope();
     bind<IApiService>(BINDINGS.IApiService).to(ApiService).inSingletonScope();
   });
 
   appContainer.load(appBindings);
+  appContainer.load(startBindings);
+  appContainer.load(steamBindings);
 
-  const bot = appContainer.get<Bot>(BINDINGS.Bot);
+  const app = appContainer.get<App>(BINDINGS.App);
 
-  bot.init();
+  app.init();
 
-  process.on('SIGINT', () => bot.stop('SIGINT'));
-  process.on('SIGTERM', () => bot.stop('SIGTERM'));
+  process.on('SIGINT', () => app.stop('SIGINT'));
+  process.on('SIGTERM', () => app.stop('SIGTERM'));
 };
 
 start();
