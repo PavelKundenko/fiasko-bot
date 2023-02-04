@@ -20,5 +20,7 @@ export class StartController implements IController {
 
   register(): void {
     this.bot.start(this.startService.start);
+
+    this.bot.help(this.startService.help);
   }
 }
